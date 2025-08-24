@@ -14,8 +14,8 @@ public class Fragata extends Embarcacao implements PodeAtirarSimples, PodeAtirar
     }
 
     /**
-     * Define qual a quantidade de tiros disponíveis a embarcação terá
-     * @return Set com os tipos e as quantidades de tiros
+     * Define qual a quantidade de tiros disponíveis a embarcação terá.
+     * @return Set com os tipos e as quantidades de tiros.
      */
     @Override
     public Set<TipoTiro> getTirosDisponiveis() {
