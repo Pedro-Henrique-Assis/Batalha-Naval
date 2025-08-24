@@ -34,10 +34,16 @@ public class Jogo {
         // Fase 2: Batalha (Loop do Jogo)
         System.out.println("\n--- QUE A BATALHA COMECE! ---");
         while (true) {
-            // Exibe os tabuleiros (perspectiva do jogador humano)
-            System.out.println("\n--- SEU TABULEIRO (JOGADOR 1) ---");
-            jogador1.getTabuleiro().exibir();
-            // TODO: Adicionar um método para exibir o tabuleiro do adversário (com a "névoa de guerra")
+            System.out.println("\n======================================");
+            System.out.println("TURNO DE: " + jogadorAtual.getNome());
+
+            // Se for o turno do humano, mostra ambos os tabuleiros
+            if (jogadorAtual instanceof JogadorHumano) {
+                System.out.println("\n--- SEU TABULEIRO DE NAVIOS ---");
+                jogador1.getTabuleiro().exibir();
+                System.out.println("\n--- TABULEIRO DE ALVOS (Computador) ---");
+                jogador2.getTabuleiro().exibirParaAdversario();
+            }
 
             // Jogador atual realiza a jogada
             jogadorAtual.realizarJogada(getAdversario());
@@ -47,12 +53,8 @@ public class Jogo {
                 jogadorAtual.setVencedor(true);
                 break; // Fim de jogo
             }
-
-            // Troca o turno
             trocarTurno();
         }
-
-        // Fase 3: Fim de Jogo
         anunciarVencedor();
     }
 

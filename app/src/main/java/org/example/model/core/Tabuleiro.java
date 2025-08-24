@@ -3,9 +3,9 @@ package org.example.model.core;
 import org.example.model.embarcacoes.Embarcacao;
 import org.example.model.enums.Dificuldade;
 import org.example.model.enums.EstadoCelula;
+
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class Tabuleiro {
     private final int tamanho;
@@ -105,7 +105,7 @@ public class Tabuleiro {
             }
         }
 
-        // Se todas as posições são válidas, ocupa as células na grade
+        // Se todas as posições são válidas, ocupa as células no reticulado
         for (Coordenada c : posicoes) {
             reticulado[c.linha()][c.coluna()] = EstadoCelula.OCUPADO;
         }

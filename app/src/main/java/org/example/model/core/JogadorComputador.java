@@ -5,17 +5,28 @@ import org.example.model.embarcacoes.*;
 import org.example.model.enums.Dificuldade;
 import org.example.model.enums.Orientacao;
 import org.example.utils.PosicionamentoUtils;
+import org.example.model.enums.EstadoCelula;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 public class JogadorComputador extends Jogador {
 
     private final Dificuldade dificuldade;
+    private final List<Coordenada> tirosDisponiveis;
+    private final Random random = new Random();
 
     public JogadorComputador(Dificuldade dificuldade) {
         super("Computador", dificuldade);
         this.dificuldade = dificuldade;
+        // Prepara uma lista de todas as coordenadas possíveis para atirar
+        this.tirosDisponiveis = new ArrayList<>();
+        for (int i = 0; i < tabuleiro.getTamanho(); i++) {
+            for (int j = 0; j < tabuleiro.getTamanho(); j++) {
+                tirosDisponiveis.add(new Coordenada(i, j));
+            }
+        }
     }
 
     /**
@@ -25,7 +36,6 @@ public class JogadorComputador extends Jogador {
     public void posicionarFrota() {
         System.out.println("\n" + this.nome + " está posicionando a frota...");
         List<Embarcacao> frotaParaPosicionar = FrotaFactory.criarFrota(dificuldade);
-        Random random = ThreadLocalRandom.current();
 
         for (Embarcacao modelo : frotaParaPosicionar) {
             boolean posicionado = false;
@@ -52,7 +62,18 @@ public class JogadorComputador extends Jogador {
     @Override
     public void realizarJogada(Jogador adversario) {
         System.out.println("\n" + this.nome + " está realizando uma jogada...");
-        // TODO: Implementar a lógica para o computador escolher um alvo aleatoriamente.
-        System.out.println("(Lógica de tiro aleatório a ser implementada)");
+
+        int indiceAleatorio = random.nextInt(tirosDisponiveis.size());
+        Coordenada alvo = tirosDisponiveis.remove(indiceAleatorio);
+
+        System.out.println(this.nome + " atirou na coordenada (" + alvo.linha() + ", " + alvo.coluna() + ").");
+
+        EstadoCelula resultado = adversario.getTabuleiro().receberTiro(alvo);
+
+        if (resultado == EstadoCelula.ATINGIDO_OCUPADO) {
+            System.out.println("-> ACERTOU!");
+        } else {
+            System.out.println("-> ÁGUA!");
+        }
     }
 }
