@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 public class PortaAvioes extends Embarcacao implements PodeAtirarSimples, PodeAtirarDuplo, PodeAtirarExplosivo {
     public PortaAvioes(List<Coordenada> posicoes, Dificuldade dificuldade) {
-        super("Porta-aviões", 6, posicoes, dificuldade);
+        super("Porta-avioes", 6, posicoes, dificuldade);
     }
 
     /**

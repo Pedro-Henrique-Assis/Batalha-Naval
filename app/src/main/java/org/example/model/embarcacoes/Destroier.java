@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 public class Destroier extends Embarcacao implements PodeAtirarSimples {
     public Destroier(List<Coordenada> posicoes, Dificuldade dificuldade) {
-        super("Destróier", 3, posicoes, dificuldade);
+        super("Destroier", 3, posicoes, dificuldade);
     }
 
     /**
@@ -21,7 +21,7 @@ public class Destroier extends Embarcacao implements PodeAtirarSimples {
     @Override
     public Set<TipoTiro> getTirosDisponiveis() {
         Set<TipoTiro> tiros = new HashSet<>();
-        PodeAtirarSimples.super.adicionarTirosDisponiveis(tiros);
+        PodeAtirarSimples.super.adicionarTiroSimples(tiros);
         return tiros;
     }
 }

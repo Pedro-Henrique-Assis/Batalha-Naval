@@ -50,7 +50,7 @@ public class JogadorHumano extends Jogador {
                     System.out.println(modelo.getNome() + " posicionado com sucesso!");
                     posicionado = true;
                 } else {
-                    System.out.println("Posição inválida! A embarcação sairia do tabuleiro ou se sobrepõe a outra. Tente novamente.");
+                    System.out.println("Posicao invalida! A embarcacao sairia do tabuleiro ou se sobrepoe a outra. Tente novamente.");
                 }
             }
         }
@@ -100,7 +100,7 @@ public class JogadorHumano extends Jogador {
                 if (resultado == EstadoCelula.ATINGIDO_OCUPADO) {
                     msg += "ACERTOU!";
                 } else {
-                    msg += "ÁGUA!";
+                    msg += "AGUA!";
                 }
                 System.out.println(msg);
             }

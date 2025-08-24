@@ -21,7 +21,7 @@ public class Submarino extends Embarcacao implements PodeAtirarSimples {
     @Override
     public Set<TipoTiro> getTirosDisponiveis() {
         Set<TipoTiro> tiros = new HashSet<>();
-        PodeAtirarSimples.super.adicionarTirosDisponiveis(tiros);
+        PodeAtirarSimples.super.adicionarTiroSimples(tiros);
         return tiros;
     }
 }
