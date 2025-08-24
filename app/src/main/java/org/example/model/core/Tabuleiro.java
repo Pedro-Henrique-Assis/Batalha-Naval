@@ -19,6 +19,65 @@ public class Tabuleiro {
         inicializarReticulado();
     }
 
+    /**
+     * Registra um tiro em uma coordenada específica do tabuleiro.
+     * @param coordenada A coordenada do tiro.
+     * @return O estado da célula APÓS o tiro.
+     */
+    public EstadoCelula receberTiro(Coordenada coordenada) {
+        if (!estaDentroDosLimites(coordenada)) {
+            return null;
+        }
+
+        EstadoCelula estadoAtual = reticulado[coordenada.linha()][coordenada.coluna()];
+
+        if (estadoAtual == EstadoCelula.OCUPADO) {
+            reticulado[coordenada.linha()][coordenada.coluna()] = EstadoCelula.ATINGIDO_OCUPADO;
+
+            // Encontra a embarcação na coordenada e registra o dano
+            for (Embarcacao e : embarcacoes) {
+                if (e.getPosicoes().contains(coordenada)) {
+                    e.registrarAtingido();
+                    if (e.estaAfundada()) {
+                        System.out.println("-> AFUNDOU O " + e.getNome().toUpperCase() + "!");
+                    }
+                    break;
+                }
+            }
+            return EstadoCelula.ATINGIDO_OCUPADO;
+
+        } else if (estadoAtual == EstadoCelula.AGUA) {
+            reticulado[coordenada.linha()][coordenada.coluna()] = EstadoCelula.ATINGIDO_AGUA;
+            return EstadoCelula.ATINGIDO_AGUA;
+        }
+        return estadoAtual;
+    }
+
+    /**
+     * Exibe o tabuleiro na perspectiva do adversário (com "névoa de guerra").
+     * Mostra apenas os tiros dados, sem revelar as posições das embarcações não atingidas.
+     */
+    public void exibirParaAdversario() {
+        System.out.print("   ");
+        for (int i = 0; i < tamanho; i++) {
+            System.out.printf("%2d ", i);
+        }
+        System.out.println();
+
+        for (int i = 0; i < tamanho; i++) {
+            System.out.printf("%2d ", i);
+            for (int j = 0; j < tamanho; j++) {
+                char simbolo = switch (reticulado[i][j]) {
+                    case AGUA, OCUPADO -> '?'; // "Névoa de guerra"
+                    case ATINGIDO_AGUA -> 'o'; // Tiro na água
+                    case ATINGIDO_OCUPADO -> 'X'; // Acerto
+                };
+                System.out.printf(" %c ", simbolo);
+            }
+            System.out.println();
+        }
+    }
+
 
     /**
      * Inicializa o reticulado com as posições de acordo com a dificuldade.
