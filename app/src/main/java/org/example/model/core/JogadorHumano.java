@@ -6,8 +6,15 @@ import org.example.model.enums.Dificuldade;
 import org.example.model.enums.Orientacao;
 import org.example.utils.ConsoleUtils;
 import org.example.utils.PosicionamentoUtils;
+import org.example.model.enums.EstadoCelula;
+import org.example.model.enums.TipoTiro;
+import org.example.utils.TiroUtils;
+import org.example.model.habilidades.*;
+import org.example.model.enums.Direcao;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class JogadorHumano extends Jogador {
 
@@ -58,7 +65,52 @@ public class JogadorHumano extends Jogador {
     @Override
     public void realizarJogada(Jogador adversario) {
         System.out.println("\nSua vez de atirar, " + this.nome + "!");
-        // TODO: Implementar a lógica para o jogador escolher embarcação, tipo de tiro e alvo.
-        System.out.println("(Lógica de tiro a ser implementada)");
+
+        // Filtrar para obter apenas embarcações que não afundaram
+        List<Embarcacao> embarcacoesAtivas = this.tabuleiro.getEmbarcacoes().stream()
+                .filter(e -> !e.estaAfundada())
+                .collect(Collectors.toList());
+
+        // Deixar o jogador escolher a embarcação
+        Embarcacao embarcacaoEscolhida = ConsoleUtils.escolherEmbarcacao(embarcacoesAtivas);
+
+        // Deixar o jogador escolher o tipo de tiro
+        Set<TipoTiro> tirosDisponiveis = embarcacaoEscolhida.getTirosDisponiveis();
+        TipoTiro tipoTiroEscolhido = ConsoleUtils.escolherTipoTiro(tirosDisponiveis);
+
+        // Deixar o jogador escolher a coordenada alvo
+        System.out.println("Escolha a coordenada alvo.");
+        Coordenada alvo = ConsoleUtils.lerCoordenada(adversario.getTabuleiro().getTamanho());
+
+        // Calcular as coordenadas afetadas
+        List<Coordenada> coordenadasAfetadas = TiroUtils.getCoordenadasAfetadas(alvo, tipoTiroEscolhido);
+        if (tipoTiroEscolhido == TipoTiro.DUPLO) {
+            Direcao direcao = ConsoleUtils.lerDirecaoTiroDuplo();
+            coordenadasAfetadas = TiroUtils.getCoordenadasAfetadas(alvo, tipoTiroEscolhido, direcao);
+        } else {
+            coordenadasAfetadas = TiroUtils.getCoordenadasAfetadas(alvo, tipoTiroEscolhido);
+        }
+
+        // Processar cada tiro
+        System.out.println("\n--- RESULTADO DOS TIROS ---");
+        for (Coordenada c : coordenadasAfetadas) {
+            EstadoCelula resultado = adversario.getTabuleiro().receberTiro(c);
+            if (resultado != null) { // Se o tiro foi dentro do tabuleiro
+                String msg = "Tiro em (" + c.linha() + ", " + c.coluna() + "): ";
+                if (resultado == EstadoCelula.ATINGIDO_OCUPADO) {
+                    msg += "ACERTOU!";
+                } else {
+                    msg += "ÁGUA!";
+                }
+                System.out.println(msg);
+            }
+        }
+
+        // Atualizar munição
+        if (embarcacaoEscolhida instanceof PodeAtirarDuplo && tipoTiroEscolhido == TipoTiro.DUPLO) {
+            ((PodeAtirarDuplo) embarcacaoEscolhida).usarTiroDuplo();
+        } else if (embarcacaoEscolhida instanceof PodeAtirarExplosivo && tipoTiroEscolhido == TipoTiro.EXPLOSIVO) {
+            ((PodeAtirarExplosivo) embarcacaoEscolhida).usarTiroExplosivo();
+        }
     }
 }
